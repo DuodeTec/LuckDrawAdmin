@@ -5,7 +5,7 @@
 
 ### 文件目录
 .                    
-├── config                  
+├── config                
 │  ├── config.js                   菜单配置                
 │  └── proxy.js                    请求路由配置    
 ├── mock                           后端请求拦截，模拟请求    
