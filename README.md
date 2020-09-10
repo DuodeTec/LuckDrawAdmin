@@ -4,18 +4,18 @@
 
 
 ### 文件目录
-
-├─config                  
-│  ├─config.js                 菜单配置                
-│  ├─proxy.js                  请求路由配置    
-├─mock                         后端请求拦截，模拟请求    
-├─src                           
-│  ├─locales                   菜单文字翻译              
-│  ├─pages                     页面内容    
-│  ├─services                  请求接口    
-│  ├─utils                     公共方法    
-│  │  ├─request.js             请求全局封装，头部加入token    
-
+.                    
+├── config                  
+│  ├── config.js                   菜单配置                
+│  └── proxy.js                    请求路由配置    
+├── mock                           后端请求拦截，模拟请求    
+├── src                           
+│    ├── locales                   菜单文字翻译              
+│    ├── pages                     页面内容    
+│    ├── services                  请求接口    
+│    └── utils                     公共方法    
+│          └── request.js          请求全局封装，头部加入token    
+└── README.md
 
 
 #### 登陆
