@@ -4,7 +4,7 @@
 
 
 ### 文件目录
-.                    
+```                  
 ├── config                
 │  ├── config.js                   菜单配置                
 │  └── proxy.js                    请求路由配置    
@@ -16,7 +16,7 @@
 │    └── utils                     公共方法    
 │          └── request.js          请求全局封装，头部加入token    
 └── README.md
-
+```
 
 #### 登陆
 ![avatar](http://cdn.gbcinterior.com/git/1.jpg)
