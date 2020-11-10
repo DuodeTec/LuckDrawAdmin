@@ -3,7 +3,7 @@ import { Table ,Avatar,Input,Space,Button,DatePicker,Card,Layout,Collapse,Switch
 } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined,LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { getAllUser,getLuckUser } from '@/services/user.js';
+import { getAllUser,getLuckUser,getNewAllLuckUser } from '@/services/user.js';
 
 
 
@@ -13,6 +13,7 @@ import { getAllUser,getLuckUser } from '@/services/user.js';
 const { TextArea } = Input;
 
 class Index extends React.Component {
+  
   state = {
     data: [],
     pagination: {
@@ -31,6 +32,7 @@ class Index extends React.Component {
     uloading:false, 
     imageUrl:'',
     imgData:'',
+    luckUser:[],
     inputData:{  
       inputTitle:'',
       inputUrl:'',
@@ -49,7 +51,9 @@ class Index extends React.Component {
   };
   async componentDidMount() {
     const { pagination } = this.state;
-    this.getData();
+    // this.getData();
+    this.getLuckUser();
+    // console.log(apiUrl);
   }
   async getData(){
     let res = await getLuckUser( {
@@ -76,7 +80,13 @@ class Index extends React.Component {
             // console.log(this.state.data)
           });
   }
-
+  async getLuckUser(){
+    let res = await getNewAllLuckUser();
+    // console.log(res)
+    this.setState({
+      luckUser:res.data
+    })
+  }
 
   handleTableChange  (pagination, filters, sorter)  {
     // console.log(pagination, filters, sorter)
@@ -172,10 +182,9 @@ class Index extends React.Component {
       });
   };
   exportExcel(){
-    window.location.href='http://cx.com:8888/william/dhl_luckdraw/public/index.php/api/v1/exportExcel?token='+localStorage.getItem('token')+'&type=luck'
+    window.location.href='https://www.dalalapic.com/h5/dhl/admin/public/index.php/api/v1/exportExcel?token='+localStorage.getItem('token')+'&type=luck'
+    // window.location.href='http://cx.com:8888/william/dhl_luckdraw/public/index.php/api/v1/exportExcel?token='+localStorage.getItem('token')+'&type=luck'
   }
-
-  
   render() {
 const columns = [
   // {
@@ -184,33 +193,42 @@ const columns = [
   //   key:'id',
   //   width: 100,
   // },
-  {
-    title: '中奖类型',
-    dataIndex: 'win_type',
-    key:'win_type',
-    sorter: true,
-    width: 100,
-  },
+  // {
+  //   title: '中奖类型',
+  //   dataIndex: 'win_type',
+  //   key:'win_type',
+  //   sorter: true,
+  //   width: 100,
+  // },
   {
     title: '手机号',
-    dataIndex: 'user_phone',
-    key:'user_phone',
+    dataIndex: 'phone',
+    key:'phone',
     width: 100,
-    ...this.getColumnSearchProps('user_phone'),
+    ...this.getColumnSearchProps('phone'),
   },
+  
   {
     title: '收货人',
-    dataIndex: 'user_name',
-    key:'user_name',
+    dataIndex: 'real_name',
+    key:'real_name',
     sorter: false,
     width: 100,
   },
   {
-    title: '收货地址',
-    dataIndex: 'user_address',
-    key:'user_address',
+    title: '城市',
+    dataIndex: 'add_province',
+    key:'add_province',
     width: 100,
   },
+  {
+    title: '地址',
+    dataIndex: 'add_detail',
+    key:'add_detail',
+    sorter: false,
+    width: 100,
+  },
+
   // {
   //   title: 'weapp_id',
   //   dataIndex: 'weapp_id',
@@ -218,15 +236,15 @@ const columns = [
   //   width: 100,
   // },
   {
-    title: 'weapp_name',
-    dataIndex: 'weapp_name',
-    key:'weapp_name',
+    title: '小程序名',
+    dataIndex: 'user_name',
+    key:'user_name',
     width: 100,
   },
   {
-    title: 'weapp_headimg',
-    dataIndex: 'weapp_headimg',
-    key:'weapp_headimg',
+    title: '小程序头像',
+    dataIndex: 'header_img',
+    key:'header_img',
     width: 100,
     render: (headimg,record) => (
       <>
@@ -235,10 +253,10 @@ const columns = [
     )
   },
   {
-    title: 'weapp_openid',
-    dataIndex: 'weapp_openid',
-    key:'weapp_openid',
-    ...this.getColumnSearchProps('weapp_openid'),
+    title: 'openid',
+    dataIndex: 'openid',
+    key:'openid',
+    ...this.getColumnSearchProps('openid'),
     width: 100,
   },
   {
@@ -259,27 +277,40 @@ const columns = [
 
 ];
 
-    const { data, pagination, loading } = this.state;
+    const { data, pagination, loading,luckUser } = this.state;
     const { Header, Footer, Sider, Content } = Layout;
 
     return (
       <>
           <Button onClick={this.exportExcel.bind(this)}>导出excel表</Button>
-          <Card>
-              <Table
+          
+ 
+            {
+              (luckUser||[]).map((v,k)=>{
+                return  <Card key={k}>
+                <Header style={{'color':'white'}}>{v.name}中奖名单</Header>
+                <Table
                   columns={columns}
                   rowKey='id'
-                  dataSource={data}
-                  pagination={{
-                    current:pagination.page,
-                    pageSize:pagination.pagesize,
-                    total:pagination.total,
-                  }}
-                  // scroll={{ x: 2500 }}
+                  dataSource={v.data}
                   loading={loading}
-                  onChange={this.handleTableChange.bind(this)}
-                />
-          </Card>
+                  pagination={false}
+                /></Card>
+              })
+            }
+              {/* <Table
+                  // columns={columns}
+                  // rowKey='id'
+                  // dataSource={luckUser}
+                  // pagination={{
+                  //   current:pagination.page,
+                  //   pageSize:pagination.pagesize,
+                  //   total:pagination.total,
+                  // }}
+                  // scroll={{ x: 2500 }}
+                  // loading={loading}
+                  // onChange={this.handleTableChange.bind(this)}
+                /> */}
       </>
     );
   }

@@ -3,7 +3,7 @@ import { Table ,Avatar,Input,Space,Button,DatePicker,Card,Layout,Collapse,Switch
 } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined,LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { getAllUser,getLuckUser,delUserInfo } from '@/services/user.js';
+import { getAllUser,getLuckUser,getNewAllLuckUser ,getIntegralHistory,delIntegralHistory } from '@/services/user.js';
 
 
 
@@ -31,6 +31,7 @@ class Index extends React.Component {
     uloading:false, 
     imageUrl:'',
     imgData:'',
+    luckUser:[],
     inputData:{  
       inputTitle:'',
       inputUrl:'',
@@ -50,9 +51,10 @@ class Index extends React.Component {
   async componentDidMount() {
     const { pagination } = this.state;
     this.getData();
+    // this.getLuckUser();
   }
   async getData(){
-    let res = await getAllUser( {
+    let res = await getIntegralHistory( {
       page:this.state.pagination.page,
       pagesize:this.state.pagination.pagesize,
       searchedColumn:this.state.searchedColumn,
@@ -76,7 +78,13 @@ class Index extends React.Component {
             // console.log(this.state.data)
           });
   }
-
+  async getLuckUser(){
+    let res = await getNewAllLuckUser();
+    // console.log(res)
+    this.setState({
+      luckUser:res.data
+    })
+  }
 
   handleTableChange  (pagination, filters, sorter)  {
     // console.log(pagination, filters, sorter)
@@ -171,13 +179,10 @@ class Index extends React.Component {
         that.getData();
       });
   };
-  exportExcel(){
-    window.location.href='http://cx.com:8888/william/dhl_luckdraw/public/index.php/api/v1/exportExcel?token='+localStorage.getItem('token')+'&type=all'
-  }
   async delHistory(record){
     // console.log(record);
     if(record.id){
-      let res = await delUserInfo({id:record.id});
+      let res = await delIntegralHistory({id:record.id});
       if(res.error_code=='0'){
         //删除成功
         let idata=[];
@@ -192,22 +197,46 @@ class Index extends React.Component {
       }
     }
   }
-  
+  exportExcel(){
+    window.location.href='http://cx.com:8888/william/dhl_luckdraw/public/index.php/api/v1/exportExcel?token='+localStorage.getItem('token')+'&type=luck'
+  }
   render() {
 const columns = [
-  // {
-  //   title: 'id',
-  //   dataIndex: 'id',
-  //   key:'id',
-  //   width: 100,
-  // },
-  // {
-  //   title: 'weapp_id',
-  //   dataIndex: 'weapp_id',
-  //   key:'weapp_id',
-  //   width: 100,
-  // },
-
+  {
+    title: '一周的第几天签到',
+    dataIndex: 'day_num',
+    key:'day_num',
+    width: 100,
+  },
+  {
+    title: '积分详情',
+    dataIndex: 'score_type',
+    key:'score_type',
+    sorter: true,
+    width: 100,
+  },
+  {
+    title: '本次增加积分',
+    dataIndex: 'score_add',
+    key:'score_add',
+    sorter: true,
+    width: 100,
+  },
+  
+  {
+    title: '积分类型',
+    dataIndex: 'score_rule',
+    key:'score_rule',
+    sorter: true,
+    width: 100,
+  },
+  {
+    title: '一周的第几天签到',
+    dataIndex: 'day_num',
+    key:'day_num',
+    width: 100,
+  },
+ 
   {
     title: 'openid',
     dataIndex: 'openid',
@@ -215,44 +244,7 @@ const columns = [
     ...this.getColumnSearchProps('openid'),
     width: 100,
   },
-  {
-    title: '小程序名',
-    dataIndex: 'user_name',
-    key:'user_name',
-    width: 100,
-  },
-  {
-    title: '小程序头像',
-    dataIndex: 'header_img',
-    key:'header_img',
-    width: 100,
-    render: (header_img,record) => (
-      <>
-        <img style={{'width':'100px','height':'100px'}} src={header_img} />
-      </>
-    )
-  },
-  {
-    title: '邀请人id',
-    dataIndex: 'invite_id',
-    key:'invite_id',
-    ...this.getColumnSearchProps('invite_id'),
-    width: 100,
-  },
-  // {
-  //   title: '剩余抽奖次数',
-  //   dataIndex: 'draw_times',
-  //   key:'draw_times',
-  //   width: 100,
-  // },
-  
-  {
-    title: 'ip',
-    dataIndex: 'ip',
-    key:'ip',
-        ...this.getColumnSearchProps('ip'),
-    width: 100,
-  },
+
   {
     title: 'create_time',
     dataIndex: 'create_time',
@@ -271,16 +263,29 @@ const columns = [
     ),
   }
   
+  
 
 ];
 
-    const { data, pagination, loading } = this.state;
+    const { data, pagination, loading,luckUser } = this.state;
     const { Header, Footer, Sider, Content } = Layout;
 
     return (
       <>
           {/* <Button onClick={this.exportExcel.bind(this)}>导出excel表</Button> */}
-          <Card>
+            {
+              // (luckUser||[]).map((v,k)=>{
+              //   return  <Card key={k}>
+              //   <Header style={{'color':'white'}}>{v.name}中奖名单</Header>
+              //   <Table
+              //     columns={columns}
+              //     rowKey='id'
+              //     dataSource={v.data}
+              //     loading={loading}
+              //     pagination={false}
+              //   /></Card>
+              // })
+            }
               <Table
                   columns={columns}
                   rowKey='id'
@@ -294,7 +299,6 @@ const columns = [
                   loading={loading}
                   onChange={this.handleTableChange.bind(this)}
                 />
-          </Card>
       </>
     );
   }

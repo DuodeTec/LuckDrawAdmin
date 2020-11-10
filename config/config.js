@@ -4,6 +4,14 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
+  define: {
+    apiUrl:'/h5/dhl/api/public/index.php/api/v1/'
+    // apiUrl:'/william/dhl_luckdraw/public/index.php/api/v1/'
+    // define: {
+    //   FOO: 'bar',
+    // } 然后你写 console.log(hello, FOO); 会被编译成 console.log(hello, 'bar')。
+  },
+  history: { type: 'hash' },// 默认是 browser 防止部署服务器后，刷新打不开页面
   hash: true,
   antd: {},
   dva: {
@@ -19,7 +27,7 @@ export default defineConfig({
   dynamicImport: {
     loading: '@/components/PageLoading/index',
   },
-  targets: {
+  targets: {//配置浏览器最低版本,比如兼容ie11
     ie: 11,
   },
   // umi routes: https://umijs.org/docs/routing
@@ -93,6 +101,12 @@ export default defineConfig({
                   icon: 'smile',
                   component: './userList/luckUser',
                 },
+                {
+                  path: '/userList/integralHistory',
+                  name: 'integralHistory',
+                  icon: 'smile',
+                  component: './userList/integralHistory',
+                },
               ],
             },
             // {
@@ -127,4 +141,6 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
+  base: '/h5/dhl/admin/', //部署到非根目录时才需配置
+  publicPath: '/h5/dhl/admin/',
 });

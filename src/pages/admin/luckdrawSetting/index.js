@@ -1,4 +1,4 @@
-import { Card,Table,Switch,Input,Button } from 'antd';
+import { Card,Table,Switch,Input,Button ,DatePicker} from 'antd';
 import React, { useState,useEffect } from 'react';
 import {getSetting,updateSetting} from '@/services/setting.js'
 
@@ -40,8 +40,32 @@ export default class Index extends React.Component {
     })
     this.setState({data:data})
   }
+
+  async handleDatePickerrConfirm(record,valueName,e){
+
+    let inputValue=  e._d.getFullYear()+'-'+(e._d.getMonth()+1) +'-'+(e._d.getDate()) ;
+    console.log(inputValue)
+    if(inputValue ){
+      //发送
+      let params={};
+      params[valueName] = inputValue;
+      let res = await updateSetting(params);
+      console.log(res);
+    }
+    //更新
+    let data = this.state.data;
+    data.map((v,k)=>{
+      if(v.id==record.id){
+        data[k][valueName+'Show']=false;
+        data[k][valueName]=inputValue;
+      }
+    })
+    this.setState({data:data})
+    
+  }
   async handleInputConfirm(record,valueName,e){
-    console.log(record, e.target.value)
+    console.log(record, e)
+    
     let inputValue= e.target.value;
     if(inputValue && inputValue >= 0){
       //发送
@@ -62,9 +86,126 @@ export default class Index extends React.Component {
     
   }
   render(){
+    const dateFormat='YYYY-MM-DD'
+    const columns5 =[
+      // {
+      //   title: '是否开启抽奖',
+      //   dataIndex: 'can_win',
+      //   key:'can_win',
+      //   width: 150,
+      //   render: (can_win, record) => (
+      //     <Switch defaultChecked={can_win=='1'?true:false}  onChange={this.onSwitchChange.bind(this,record,'can_win')} >
+      //     </Switch>
+      //   ),
+      // },
+      {
+        title: '活动开始时间',
+        dataIndex: 'start_time',
+        width: 150,//
+        render:(total,record)=>(
+          <>
+            {
+              record['start_timeShow']?
+              <DatePicker 
+              onChange={this.handleDatePickerrConfirm.bind(this,record,'start_time')}
+               format={dateFormat}
+               />
+              :<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'start_time')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      
+    ];
+    const columns4 = [
+      {
+        title: '飞机增加积分',
+        dataIndex: 'integral_1',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_1Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_1')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_1')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      {
+        title: '无人机增加积分',
+        dataIndex: 'integral_2',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_2Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_2')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_2')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      {
+        title: '摩托车增加积分',
+        dataIndex: 'integral_3',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_3Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_3')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_3')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      {
+        title: '自行车增加积分',
+        dataIndex: 'integral_4',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_4Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_4')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_4')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      {
+        title: '河船增加积分',
+        dataIndex: 'integral_5',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_5Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_5')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_5')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+      {
+        title: 'F1赛车增加积分',
+        dataIndex: 'integral_6',
+        width: 150,
+        render:(total,record)=>(
+          <>
+            {
+              record['integral_6Show']?<Input type="number" defaultValue={total} 
+              onPressEnter={this.handleInputConfirm.bind(this,record,'integral_6')}
+              />:<><Button type="dashed" size="small" onClick={this.showInput.bind(this,record,'integral_6')}>{total?total:0}</Button></>
+            }
+          </>
+        )
+      },
+    ];
     const columns2 = [
       {
-        title: '一等奖中奖率',
+        title: '飞机中奖率',
         dataIndex: 'winrate_1',
         width: 150,
         render:(total,record)=>(
@@ -78,7 +219,7 @@ export default class Index extends React.Component {
         )
       },
       {
-        title: '二等奖中奖率',
+        title: '无人机中奖率',
         dataIndex: 'winrate_2',
         width: 150,
         render:(total,record)=>(
@@ -92,7 +233,7 @@ export default class Index extends React.Component {
         )
       },
       {
-        title: '三等奖中奖率',
+        title: '摩托车中奖率',
         dataIndex: 'winrate_3',
         width: 150,
         render:(total,record)=>(
@@ -106,7 +247,7 @@ export default class Index extends React.Component {
         )
       },
       {
-        title: '四等奖中奖率',
+        title: '自行车中奖率',
         dataIndex: 'winrate_4',
         width: 150,
         render:(total,record)=>(
@@ -120,7 +261,7 @@ export default class Index extends React.Component {
         )
       },
       {
-        title: '五等奖中奖率',
+        title: '河船中奖率',
         dataIndex: 'winrate_5',
         width: 150,
         render:(total,record)=>(
@@ -134,7 +275,7 @@ export default class Index extends React.Component {
         )
       },
       {
-        title: '六等奖中奖率',
+        title: 'F1赛车中奖率',
         dataIndex: 'winrate_6',
         width: 150,
         render:(total,record)=>(
@@ -340,16 +481,24 @@ export default class Index extends React.Component {
   
     ];
       return (<>
-        <Card >
+        {/* <Card >
           <Table rowKey='id' columns={columns3} dataSource={this.state.data} pagination={false}  /> 
         </Card>
         <div style={{ height:10}}></div> 
         <Card>
           <Table rowKey='id'  columns={columns} dataSource={this.state.data} pagination={false}  /> 
+        </Card> */}
+        <div style={{ height:10}}></div>
+        <Card>
+          <Table rowKey='id'  columns={columns5} dataSource={this.state.data} pagination={false}  /> 
         </Card>
         <div style={{ height:10}}></div>
         <Card>
           <Table rowKey='id'  columns={columns2} dataSource={this.state.data} pagination={false}  /> 
+        </Card>
+        <div style={{ height:10}}></div>
+        <Card>
+          <Table rowKey='id'  columns={columns4} dataSource={this.state.data} pagination={false}  /> 
         </Card>
       </>)
   }

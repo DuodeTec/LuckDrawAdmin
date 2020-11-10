@@ -10,7 +10,8 @@ export default {
   'menu.userList': '用户列表',
   'menu.userList.luckUser': '中奖人信息',
   'menu.userList.allUser': '参加活动人信息',
-
+  'menu.userList.integralHistory': '积分记录',
+  
 
 
 

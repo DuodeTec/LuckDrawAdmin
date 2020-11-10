@@ -4,7 +4,7 @@ import request from '@/utils/request';
 // }
 
 export async function getWelcome(params) {
-    let res=  await request('/api/getWelcome',{
+    let res=  await request(apiUrl+'getWelcome',{
       method: 'POST',
       data: params,
     });

@@ -7,30 +7,33 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'http://cx.com:8888',
+    '/william/dhl_luckdraw/public/index.php/api/v1/': {
+      target:  'http://cx.com:8888',// '',
       changeOrigin: true,
-      pathRewrite: {
-        '^/api/': '/william/dhl_luckdraw/public/index.php/api/v1/',
-      },
+      // pathRewrite: {
+      //   '^/api/': '/william/dhl_luckdraw/public/index.php/api/v1/',
+      // },
     },
   },
   test: {
     '/api/': {
-      target: 'http://cx.com:8888',
+      target:  'www.dalalapic.com',// 'http://cx.com:8888',
       changeOrigin: true,
+      secure:true,//如果是https接口，需要配置这个参数为true`
       pathRewrite: {
-        '^/api/': '/william/dhl_luckdraw/public/index.php/api/v1/',
+        // '^/api/': '/william/dhl_luckdraw/public/index.php/api/v1/',
+        '^/api/': '/h5/dhl/api/public/index.php/api/v1/',
       },
     },
   },
-  pre: {
-    '/api/': {
-      target: 'http://cx.com:8888',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api/': '/william/dhl_luckdraw/public/index.php/api/v1/',
-      },
+  prod: {
+    '/h5/dhl/api/public/index.php/api/v1/': {
+      // pathRewrite: {
+      //   '^/api/': '/h5/dhl/api/public/index.php/api/v1/',
+      // },
+      // target:  'https://www.dalalapic.com',// 'http://cx.com:8888',
+      // changeOrigin: true,// 如果接口跨域，需要进行这个参数配置为true
+      // secure:true,//如果是https接口，需要配置这个参数为true`
     },
   },
 };
