@@ -5,7 +5,7 @@ import proxy from './proxy';
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   define: {
-    apiUrl:'/h5/dhl/api/public/index.php/api/v1/'
+    apiUrl:'/h5/dhl/api/public/index.php/api/v1/'///打包时开启
     // apiUrl:'/william/dhl_luckdraw/public/index.php/api/v1/'
     // define: {
     //   FOO: 'bar',
@@ -141,6 +141,7 @@ export default defineConfig({
   manifest: {
     basePath: '/',
   },
+  //下面选项，打包再开启
   base: '/h5/dhl/admin/', //部署到非根目录时才需配置
   publicPath: '/h5/dhl/admin/',
 });
